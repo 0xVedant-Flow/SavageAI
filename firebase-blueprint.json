@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile tracking roast usage, rewards, and settings.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "dailyRoastCount": { "type": "integer" },
+        "dailyLimit": { "type": "integer" },
+        "lastLogin": { "type": "string", "format": "date-time" },
+        "rewardBalance": { "type": "integer" },
+        "isPremium": { "type": "boolean" },
+        "language": { "type": "string", "enum": ["bn", "en"] },
+        "safeMode": { "type": "boolean" },
+        "defaultMode": { "type": "string", "enum": ["funny", "savage", "dark", "friendly"] },
+        "notificationsEnabled": { "type": "boolean" }
+      },
+      "required": ["uid", "dailyRoastCount", "dailyLimit", "lastLogin", "rewardBalance", "language", "safeMode", "defaultMode"]
+    },
+    "Roast": {
+      "title": "Roast",
+      "description": "A generated roast result.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "input": { "type": "string" },
+        "output": { "type": "string" },
+        "mode": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "input", "output", "mode", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile data."
+    },
+    "/roasts/{roastId}": {
+      "schema": "Roast",
+      "description": "Generated roast history."
+    }
+  }
+}

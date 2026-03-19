@@ -1,0 +1,9 @@
+{
+  "name": "SavageAI Bangla - AI Roaster Chat",
+  "description": "A Messenger-style Bangla AI roast app. Chat with a savage friend in real-time!",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}

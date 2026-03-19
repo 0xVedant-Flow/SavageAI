@@ -1,0 +1,92 @@
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: users
+// Document ID: {userId}
+// Fields:
+//   - uid: string (required) - User's Firebase Auth UID
+//   - dailyRoastCount: number (required) - Number of roasts used today
+//   - lastLoginDate: string (required) - ISO 8601 date of last login
+//   - rewardBalance: number (required) - Extra roasts earned from ads
+//   - isPremium: boolean (optional) - Premium status
+//
+// Collection: roasts
+// Document ID: {roastId}
+// Fields:
+//   - id: string (required) - Unique ID
+//   - userId: string (required) - Owner's UID
+//   - input: string (required) - User input text
+//   - output: string (required) - AI generated roast
+//   - mode: string (required) - Roast mode (funny, savage, etc.)
+//   - createdAt: string (required) - ISO 8601 timestamp
+//
+// ===============================================================
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (request.auth.token.email == "swagotomdev@gmail.com" && request.auth.token.email_verified == true);
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email', 'displayName', 'photoURL', 'role', 'dailyRoastCount', 'dailyLimit', 'lastLogin', 'rewardBalance', 'language', 'safeMode', 'defaultMode', 'notificationsEnabled']) &&
+             data.uid is string &&
+             data.email is string &&
+             data.displayName is string &&
+             data.photoURL is string &&
+             data.role in ['admin', 'client'] &&
+             data.dailyRoastCount is int &&
+             data.dailyLimit is int &&
+             data.lastLogin is string &&
+             data.rewardBalance is int &&
+             data.language in ['bn', 'en'] &&
+             data.safeMode is bool &&
+             data.defaultMode in ['funny', 'savage', 'dark', 'friendly'] &&
+             data.notificationsEnabled is bool;
+    }
+
+    function isValidRoast(data) {
+      return data.keys().hasAll(['userId', 'input', 'output', 'mode', 'createdAt']) &&
+             data.userId == request.auth.uid &&
+             data.input is string && data.input.size() <= 500 &&
+             data.output is string && data.output.size() <= 2000 &&
+             data.mode in ['funny', 'savage', 'dark', 'friendly'] &&
+             data.createdAt is string;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if (isOwner(userId) && isValidUser(request.resource.data)) || isAdmin();
+      allow update: if (isOwner(userId) && isValidUser(request.resource.data)) || isAdmin();
+    }
+
+    match /roasts/{roastId} {
+      allow read: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && (isValidRoast(request.resource.data) || isAdmin());
+      allow delete: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+    }
+  }
+}

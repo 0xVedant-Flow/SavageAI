@@ -316,7 +316,7 @@ export default function Settings({ user }: SettingsProps) {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-sm text-zinc-300">Contact Email</span>
-              <span className="text-sm text-purple-500 font-medium">support@savageai.app</span>
+              <span className="text-sm text-purple-500 font-medium">swagotomdev@gmail.com</span>
             </div>
             <button 
               onClick={handleReportProblem}

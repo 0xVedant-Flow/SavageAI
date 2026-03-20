@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged, signInAnonymously, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, setDoc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { auth, db } from './firebase';
 import Layout from './components/Layout';
 import Home from './pages/Home';
+import { Welcome } from './pages/Welcome';
 import Rewards from './pages/Rewards';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
@@ -17,7 +18,7 @@ import { AdService } from './services/AdService';
 
 import { handleFirestoreError, OperationType } from './lib/firestore-error';
 
-export type Page = 'home' | 'rewards' | 'profile' | 'settings' | 'result' | 'splash' | 'login';
+export type Page = 'home' | 'rewards' | 'profile' | 'settings' | 'result' | 'splash' | 'login' | 'welcome';
 
 export interface UserData {
   uid: string;
@@ -34,6 +35,7 @@ export interface UserData {
   safeMode: boolean;
   defaultMode: RoastMode;
   notificationsEnabled: boolean;
+  is_first_time: boolean;
 }
 
 export default function App() {
@@ -50,19 +52,6 @@ export default function App() {
       setAuthError(null);
     } catch (err: any) {
       setAuthError(err.message);
-    }
-  };
-
-  const handleAnonymousLogin = async () => {
-    try {
-      await signInAnonymously(auth);
-      setAuthError(null);
-    } catch (err: any) {
-      if (err.code === 'auth/admin-restricted-operation') {
-        setAuthError("Anonymous login is disabled in Firebase Console. Please enable it or use Google Login.");
-      } else {
-        setAuthError(err.message);
-      }
     }
   };
 
@@ -87,6 +76,11 @@ export default function App() {
               }, { merge: true }).catch(err => handleFirestoreError(err, OperationType.WRITE, `users/${firebaseUser.uid}`));
             }
             setUser(data);
+            setLoading(false);
+            if (activeTab === 'login' || activeTab === 'splash') {
+              if (data?.is_first_time) setActiveTab('welcome');
+              else setActiveTab('home');
+            }
           } else {
             const newUser: UserData = {
               uid: firebaseUser.uid,
@@ -98,6 +92,7 @@ export default function App() {
               daily_limit: 10,
               last_reset_date: new Date().toISOString(),
               reward_balance: 0,
+              is_first_time: true,
               language: 'bn',
               safeMode: true,
               defaultMode: 'funny',
@@ -105,9 +100,9 @@ export default function App() {
             };
             setDoc(userRef, newUser).catch(err => handleFirestoreError(err, OperationType.WRITE, `users/${firebaseUser.uid}`));
             setUser(newUser);
+            setLoading(false);
+            if (activeTab === 'login' || activeTab === 'splash') setActiveTab('welcome');
           }
-          setLoading(false);
-          if (activeTab === 'login' || activeTab === 'splash') setActiveTab('home');
         }, (error) => {
           handleFirestoreError(error, OperationType.GET, `users/${firebaseUser.uid}`);
         });
@@ -132,6 +127,15 @@ export default function App() {
     };
   }, [activeTab]);
 
+  if (activeTab === 'welcome') {
+    return <Welcome onStart={async () => {
+      if (user) {
+        await updateDoc(doc(db, 'users', user.uid), { is_first_time: false });
+        setActiveTab('home');
+      }
+    }} />;
+  }
+
   if (activeTab === 'splash') {
     return <SplashScreen />;
   }
@@ -153,13 +157,6 @@ export default function App() {
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-5 h-5" alt="Google" />
             Continue with Google
           </button>
-          
-          <button 
-            onClick={handleAnonymousLogin}
-            className="w-full py-4 rounded-2xl bg-zinc-900 border border-white/10 text-white font-bold hover:bg-zinc-800 transition-all active:scale-95"
-          >
-            Continue as Guest
-          </button>
         </div>
 
         {authError && (
@@ -169,11 +166,6 @@ export default function App() {
               <span className="font-bold uppercase tracking-widest">Auth Error</span>
             </div>
             <p>{authError}</p>
-            {authError.includes('Anonymous') && (
-              <p className="text-[10px] text-zinc-500 mt-2">
-                To use Guest mode, enable "Anonymous" in Firebase Console → Authentication → Sign-in method.
-              </p>
-            )}
           </div>
         )}
       </div>
@@ -191,6 +183,7 @@ export default function App() {
             setLastRoast({ input, output, mode });
             setActiveTab('result');
           }} 
+          setActiveTab={setActiveTab}
         />;
       case 'rewards':
         return <Rewards user={user} />;
@@ -204,7 +197,7 @@ export default function App() {
           onBack={() => setActiveTab('home')} 
         />;
       default:
-        return <Home user={user} onResult={() => {}} />;
+        return <Home user={user} onResult={() => {}} setActiveTab={setActiveTab} />;
     }
   };
 

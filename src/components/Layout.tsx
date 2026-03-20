@@ -1,8 +1,10 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MessageCircle, Trophy, User, Settings, Zap, MoreVertical } from 'lucide-react';
+import { MessageCircle, Trophy, User, Settings, Zap, LogOut } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { BannerAd } from '../services/AdService';
+import { signOut } from 'firebase/auth';
+import { auth } from '../firebase';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,6 +14,14 @@ interface LayoutProps {
 }
 
 export default function Layout({ children, activeTab, setActiveTab, roastCount }: LayoutProps) {
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen bg-black text-white font-sans overflow-hidden">
       {/* Header */}
@@ -38,8 +48,8 @@ export default function Layout({ children, activeTab, setActiveTab, roastCount }
             <span className="text-[10px] font-bold text-purple-400 uppercase">Limit:</span>
             <span className="text-xs font-black">{roastCount}</span>
           </div>
-          <button className="p-1 text-zinc-400">
-            <MoreVertical className="w-5 h-5" />
+          <button onClick={handleLogout} className="p-2 rounded-full bg-zinc-900 border border-white/5 hover:bg-red-500/10 hover:border-red-500/30 transition-all text-zinc-400 hover:text-red-500">
+            <LogOut className="w-5 h-5" />
           </button>
         </div>
       </header>

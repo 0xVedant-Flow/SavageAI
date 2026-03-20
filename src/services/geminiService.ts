@@ -5,10 +5,10 @@ const apiKey = process.env.GEMINI_API_KEY;
 export type RoastMode = 'funny' | 'savage' | 'dark' | 'friendly';
 
 const MODE_PROMPTS: Record<RoastMode, string> = {
-  funny: "Generate a short, funny, family-friendly roast in Bangla. Use Gen Z slang. Keep it light and humorous. Under 2 lines.",
-  savage: "Generate a short, savage, and aggressive roast in Bangla. Use Gen Z slang. Be brutal but avoid hate speech or harassment. Under 2 lines.",
-  dark: "Generate a short, edgy, dark humor roast in Bangla. Use Gen Z slang. Keep it within safety guidelines (no hate speech). Under 2 lines.",
-  friendly: "Generate a short, lighthearted, friendly roast in Bangla. Use Gen Z slang. More like a gentle tease. Under 2 lines."
+  funny: "Generate a short, funny, family-friendly roast in Bangla. Use Gen Z slang. Light and humorous. Max 1 line.",
+  savage: "Generate a short, savage, and aggressive roast in Bangla. Use Gen Z slang. Brutal but no hate speech. Max 1 line.",
+  dark: "Generate a short, edgy, dark humor roast in Bangla. Use Gen Z slang. Edgy but safe. Max 1 line.",
+  friendly: "Generate a short, lighthearted, friendly roast in Bangla. Use Gen Z slang. Gentle tease. Max 1 line."
 };
 
 export async function generateRoast(input: string, mode: RoastMode, safeMode: boolean = true, retries = 2): Promise<string> {

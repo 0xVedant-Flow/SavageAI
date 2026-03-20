@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Send, Sparkles, Flame, Ghost, Heart, AlertCircle, Smile } from 'lucide-react';
-import { UserData } from '../App';
+import { Page, UserData } from '../App';
 import { generateRoast } from '../services/openaiService';
 import { RoastMode } from '../services/geminiService';
 import { cn } from '../lib/utils';
@@ -14,6 +14,7 @@ import { toast } from 'react-hot-toast';
 interface HomeProps {
   user: UserData | null;
   onResult: (input: string, output: string, mode: RoastMode) => void;
+  setActiveTab: (tab: Page) => void;
 }
 
 interface Message {
@@ -30,7 +31,7 @@ const MODES: { id: RoastMode, label: string, icon: React.ReactNode, color: strin
   { id: 'friendly', label: 'Friendly 🙂', icon: <Heart className="w-4 h-4" />, color: 'from-pink-400 to-rose-500' },
 ];
 
-export default function Home({ user }: HomeProps) {
+export default function Home({ user, onResult, setActiveTab }: HomeProps) {
   const [input, setInput] = useState('');
   const [mode, setMode] = useState<RoastMode>(user?.defaultMode || 'savage');
   const [loading, setLoading] = useState(false);
@@ -92,6 +93,7 @@ export default function Home({ user }: HomeProps) {
         icon: '😈',
         duration: 4000
       });
+      setActiveTab('rewards');
       return;
     }
 
@@ -254,7 +256,7 @@ export default function Home({ user }: HomeProps) {
               "w-11 h-11 rounded-full flex items-center justify-center transition-all active:scale-90",
               !input.trim() || loading
                 ? "bg-zinc-800 text-zinc-600"
-                : "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
+                : "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/20"
             )}
           >
             <Send className="w-5 h-5" />

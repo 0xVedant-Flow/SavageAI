@@ -6,17 +6,21 @@
       "type": "object",
       "properties": {
         "uid": { "type": "string" },
-        "dailyRoastCount": { "type": "integer" },
-        "dailyLimit": { "type": "integer" },
-        "lastLogin": { "type": "string", "format": "date-time" },
-        "rewardBalance": { "type": "integer" },
-        "isPremium": { "type": "boolean" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string" },
+        "used_messages": { "type": "integer" },
+        "daily_limit": { "type": "integer" },
+        "last_reset_date": { "type": "string", "format": "date-time" },
+        "reward_balance": { "type": "integer" },
+        "is_first_time": { "type": "boolean" },
         "language": { "type": "string", "enum": ["bn", "en"] },
         "safeMode": { "type": "boolean" },
         "defaultMode": { "type": "string", "enum": ["funny", "savage", "dark", "friendly"] },
         "notificationsEnabled": { "type": "boolean" }
       },
-      "required": ["uid", "dailyRoastCount", "dailyLimit", "lastLogin", "rewardBalance", "language", "safeMode", "defaultMode"]
+      "required": ["uid", "used_messages", "daily_limit", "last_reset_date", "reward_balance", "is_first_time"]
     },
     "Roast": {
       "title": "Roast",

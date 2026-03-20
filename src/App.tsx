@@ -58,11 +58,18 @@ export default function App() {
   useEffect(() => {
     AdService.initialize();
 
+    let unsubDoc: (() => void) | null = null;
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (unsubDoc) {
+        unsubDoc();
+        unsubDoc = null;
+      }
+
       if (firebaseUser) {
         const userRef = doc(db, 'users', firebaseUser.uid);
         
-        const unsubDoc = onSnapshot(userRef, (docSnap) => {
+        unsubDoc = onSnapshot(userRef, (docSnap) => {
           if (docSnap.exists()) {
             const data = docSnap.data() as UserData;
             const today = new Date().toLocaleDateString();
@@ -106,8 +113,6 @@ export default function App() {
         }, (error) => {
           handleFirestoreError(error, OperationType.GET, `users/${firebaseUser.uid}`);
         });
-
-        return () => unsubDoc();
       } else {
         setLoading(false);
         if (activeTab !== 'splash') setActiveTab('login');
@@ -123,6 +128,9 @@ export default function App() {
 
     return () => {
       unsubscribe();
+      if (unsubDoc) {
+        unsubDoc();
+      }
       clearTimeout(timer);
     };
   }, [activeTab]);

@@ -1,6 +1,6 @@
 {
-  "name": "SavageAI Bangla - AI Roaster Chat",
-  "description": "A Messenger-style Bangla AI roast app. Chat with a savage friend in real-time!",
+  "name": "SavageAI Bangla",
+  "description": "SavageAI Bangla is a fun AI chat application that provides funny and entertaining roast-style responses in Bangla. Chat with AI in a simple and smooth interface and receive instant humorous replies.",
   "requestFramePermissions": [
     "camera",
     "microphone",

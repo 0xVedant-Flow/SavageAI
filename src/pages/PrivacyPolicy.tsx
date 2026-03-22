@@ -28,12 +28,10 @@ export function PrivacyPolicy({ onBack }: { onBack: () => void }) {
           </section>
 
           <section className="mb-8">
-            <h2 className="text-lg font-bold text-purple-400 mb-3">2. Information We Collect</h2>
-            <ul className="list-disc pl-5 text-zinc-300 space-y-2">
-              <li>No personal identifiable information is required to use the basic features of the app.</li>
-              <li>Anonymous usage data may be collected to help us understand how the app is used.</li>
-              <li>User inputs (chat messages) may be processed temporarily to generate AI responses.</li>
-            </ul>
+            <h2 className="text-lg font-bold text-purple-400 mb-3">Privacy</h2>
+            <p className="text-zinc-300 leading-relaxed">
+              We do not collect personal user data. All interactions are handled securely.
+            </p>
           </section>
 
           <section className="mb-8">

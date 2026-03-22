@@ -35,7 +35,7 @@ export default function Layout({ children, activeTab, setActiveTab, roastCount }
           </div>
           <div>
             <h1 className="text-base font-bold tracking-tight">
-              SavageAI 😈
+              SavageAI Bangla 😈
             </h1>
             <div className="flex items-center gap-1.5">
               <span className="text-[10px] text-green-500 font-bold uppercase tracking-wider">Active Now</span>

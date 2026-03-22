@@ -32,7 +32,7 @@ export function About({ onBack }: { onBack: () => void }) {
         {/* Description */}
         <div className="bg-zinc-900/50 border border-white/5 rounded-2xl p-6">
           <p className="text-zinc-300 leading-relaxed text-center">
-            "SavageAI Bangla is a fun AI-powered roast chat app that lets you enjoy funny, savage, and friendly roasts in Bangla and English."
+            SavageAI Bangla is a fun AI chat application that provides funny and entertaining roast-style responses in Bangla. You can chat with AI in a simple and smooth interface and receive instant humorous replies. The app is designed for entertainment purposes only.
           </p>
         </div>
 
@@ -40,7 +40,7 @@ export function About({ onBack }: { onBack: () => void }) {
         <div>
           <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
             <ShieldAlert className="w-5 h-5 text-purple-400" />
-            Key Features
+            Features
           </h3>
           <div className="space-y-3">
             <div className="flex items-center gap-4 bg-zinc-900/30 p-4 rounded-xl border border-white/5">
@@ -48,8 +48,8 @@ export function About({ onBack }: { onBack: () => void }) {
                 <MessageSquare className="w-5 h-5 text-purple-400" />
               </div>
               <div>
-                <h4 className="font-semibold text-zinc-200">Chat-style Roasting</h4>
-                <p className="text-sm text-zinc-500">Interactive and engaging AI conversations.</p>
+                <h4 className="font-semibold text-zinc-200">Bangla AI Chat System</h4>
+                <p className="text-sm text-zinc-500">Interactive and engaging AI conversations in Bangla.</p>
               </div>
             </div>
             
@@ -58,8 +58,8 @@ export function About({ onBack }: { onBack: () => void }) {
                 <Flame className="w-5 h-5 text-pink-400" />
               </div>
               <div>
-                <h4 className="font-semibold text-zinc-200">Multiple Roast Modes</h4>
-                <p className="text-sm text-zinc-500">Funny, Savage, Friendly, and Dark humor.</p>
+                <h4 className="font-semibold text-zinc-200">Funny & Light Roast Replies</h4>
+                <p className="text-sm text-zinc-500">Humorous replies designed for entertainment.</p>
               </div>
             </div>
 
@@ -68,11 +68,18 @@ export function About({ onBack }: { onBack: () => void }) {
                 <Share2 className="w-5 h-5 text-blue-400" />
               </div>
               <div>
-                <h4 className="font-semibold text-zinc-200">Share with Friends</h4>
-                <p className="text-sm text-zinc-500">Easily copy and share the best roasts.</p>
+                <h4 className="font-semibold text-zinc-200">Clean & Easy-to-use Interface</h4>
+                <p className="text-sm text-zinc-500">Fast performance and lightweight design.</p>
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Ad Info */}
+        <div className="bg-zinc-900/50 border border-white/5 rounded-2xl p-6 text-center">
+          <p className="text-zinc-400 text-sm">
+            This app uses Google AdMob ads to support free usage.
+          </p>
         </div>
 
         {/* Mission */}
